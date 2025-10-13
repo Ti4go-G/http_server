@@ -29,7 +29,7 @@ def handle_get(route: bytes):
             return build_response(404, 'text/html', b"<h1>404 - Pagina nao encontrada</h1>")
 
 
-    # ✅ NOVA ROTA REST: /api/estoque
+    #ROTA REST: /api/estoque
     elif route == b'/api/estoque':
         estoque = carregar_estoque()
         json_data = json.dumps(estoque, ensure_ascii=False, indent=2)

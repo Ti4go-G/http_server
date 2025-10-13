@@ -9,7 +9,7 @@ def start_server():
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind((HOST, PORT))
     s.listen(5)
-    print(f"🌐 Servidor HTTP ativo em http://localhost:{PORT}")
+    print(f"Servidor HTTP ativo em http://localhost:{PORT}")
 
     try:
         while True:
