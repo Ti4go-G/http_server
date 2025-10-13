@@ -1,5 +1,6 @@
 import json
 from urllib.parse import unquote_plus
+from datetime import date, timedelta
 
 # --- Persistência ---
 def carregar_estoque():
@@ -17,18 +18,32 @@ def salvar_estoque(estoque):
 # --- Página HTML do estoque ---
 def gerar_pagina_estoque():
     estoque = carregar_estoque()
+    hoje = date.today()
     linhas_tabela = ""
 
     if not estoque:
         linhas_tabela = '<tr><td colspan="4">Nenhum produto cadastrado.</td></tr>'
     else:
         for p in estoque:
+            validade_str = p.get('data_validade', '1900-01-01') # Pega a data ou um valor padrão antigo
+            validade_obj = date.fromisoformat(validade_str)
+            dias_restantes = (validade_obj - hoje).days
+            
+            classe_css = "ok" 
+            if dias_restantes < 0:
+                classe_css = "vencido"
+            elif dias_restantes <= 30: # produtos vencendo em 30 dias ou menos
+                classe_css = "alerta"
+            
+
+            validade_formatada = validade_obj.strftime('%d/%m/%Y')
             linhas_tabela += f"""
-            <tr>
+            <tr class="{classe_css}">
                 <td>{p['id']}</td>
                 <td>{p['nome']}</td>
                 <td>{p['quantidade']}</td>
-                <td>R$ {p['preco']:.2f}</td>
+                <td>R$ {p.get('preco', 0):.2f}</td>
+                <td>{validade_formatada} ({dias_restantes} dias)</td>
             </tr>
             """
 
@@ -44,6 +59,9 @@ def gerar_pagina_estoque():
             th, td {{ border: 1px solid #ccc; padding: 8px; text-align: left; }}
             th {{ background-color: #f2f2f2; }}
             a {{ text-decoration: none; background: #007bff; color: white; padding: 8px 12px; border-radius: 4px; }}
+            tr.vencido {{ background-color: #ffcccc; /* Vermelho claro */ }}
+            tr.alerta {{ background-color: #fff3cd; /* Amarelo claro */ }}
+            tr.ok {{ background-color: #d4edda; /* Verde claro */ }}
         </style>
     </head>
     <body>
@@ -53,6 +71,7 @@ def gerar_pagina_estoque():
             <thead>
                 <tr>
                     <th>ID</th><th>Nome</th><th>Quantidade</th><th>Preço</th>
+                    <th>Validade (Dias Restantes)</th>
                 </tr>
             </thead>
             <tbody>{linhas_tabela}</tbody>

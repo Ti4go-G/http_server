@@ -2,6 +2,7 @@ import json
 from urllib.parse import unquote_plus
 from utils import carregar_estoque, salvar_estoque, gerar_pagina_estoque
 
+
 def build_response(status_code, content_type, body):
     return (
         f"HTTP/1.1 {status_code} OK\r\n"
@@ -54,7 +55,8 @@ def handle_post(route: bytes, data: bytes):
             'id': novo_id,
             'nome': dados['nome'],
             'quantidade': int(dados['quantidade']),
-            'preco': float(dados['preco'].replace(',', '.'))
+            'preco': float(dados['preco'].replace(',', '.')),
+            'data_validade': dados['validade']
         }
 
         estoque.append(novo_produto)
