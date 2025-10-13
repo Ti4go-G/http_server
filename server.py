@@ -1,7 +1,7 @@
 import socket
 from routes import handle_get, handle_post
 
-HOST = ''
+HOST = '0.0.0.0'
 PORT = 8080
 
 def start_server():
