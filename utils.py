@@ -37,13 +37,17 @@ def gerar_pagina_estoque():
             
 
             validade_formatada = validade_obj.strftime('%d/%m/%Y')
+            if dias_restantes < 0:      
+                validade_info = 'Vencido'
+            else:
+                validade_info = f'{dias_restantes} dias'
             linhas_tabela += f"""
             <tr class="{classe_css}">
                 <td>{p['id']}</td>
                 <td>{p['nome']}</td>
                 <td>{p['quantidade']}</td>
                 <td>R$ {p.get('preco', 0):.2f}</td>
-                <td>{validade_formatada} ({dias_restantes} dias)</td>
+                <td>{validade_formatada} ({validade_info})</td>
             </tr>
             """
 
