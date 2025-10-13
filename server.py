@@ -1,48 +1,54 @@
 import socket
 from routes import handle_get, handle_post
-from utils import log_request
 
 HOST = ''
 PORT = 8080
 
-# --- Criação do servidor TCP ---
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-s.bind((HOST, PORT))
-s.listen(5)
+def start_server():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.bind((HOST, PORT))
+    s.listen(5)
+    print(f"🌐 Servidor HTTP ativo em http://localhost:{PORT}")
 
-print(f"[SERVIDOR] Servidor rodando em http://localhost:{PORT}\nPressione Ctrl+C para encerrar.")
+    try:
+        while True:
+            conn, addr = s.accept()
+            data = conn.recv(8192)
 
-try:
-    while True:
-        ws, addr = s.accept()
-        data = ws.recv(4096)
-        if not data:
-            ws.close()
-            continue
+            if not data:
+                conn.close()
+                continue
 
-        # Primeira linha da requisição HTTP
-        try:
+            # --- Exibir o cabeçalho completo da requisição ---
+            print("\n===================== NOVA REQUISIÇÃO =====================")
+            try:
+                print(data.decode('utf-8'))
+            except UnicodeDecodeError:
+                print("(conteúdo binário recebido)")
+
             request_line = data.split(b'\r\n')[0]
-            method, route, _ = request_line.split(b' ')
-        except ValueError:
-            ws.close()
-            continue
+            try:
+                method, route, _ = request_line.split(b' ')
+            except ValueError:
+                conn.close()
+                continue
 
-        log_request(addr, method.decode(), route.decode())
+            # --- Roteamento básico ---
+            if method == b'GET':
+                response = handle_get(route)
+            elif method == b'POST':
+                response = handle_post(route, data)
+            else:
+                response = b"HTTP/1.1 405 Method Not Allowed\r\n\r\nMetodo nao suportado."
 
-        # --- Roteamento básico ---
-        if method == b'GET':
-            response = handle_get(route)
-        elif method == b'POST':
-            response = handle_post(route, data)
-        else:
-            response = b"HTTP/1.1 405 Method Not Allowed\r\n\r\n"
+            conn.sendall(response)
+            conn.close()
 
-        ws.sendall(response)
-        ws.close()
+    except KeyboardInterrupt:
+        print("\nServidor encerrado.")
+    finally:
+        s.close()
 
-except KeyboardInterrupt:
-    print("\n[ENCERRANDO] Servidor finalizado.")
-finally:
-    s.close()
+if __name__ == "__main__":
+    start_server()
