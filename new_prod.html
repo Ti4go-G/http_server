@@ -1,31 +1,123 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <title>Adicionar Produto</title>
   <style>
-    body { font-family: sans-serif; margin: 2em; }
-    input { display: block; margin-bottom: 10px; padding: 6px; width: 200px; }
-    button { padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; }
+   
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: linear-gradient(to bottom right, #007bff, #4e00b3);
+    }
+
+    input {
+      display: block;
+      margin-bottom: 10px;
+      padding: 6px;
+      width: 200px;
+    }
+
+    button {
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #0056b3;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .card {
+      background: rgba(249, 249, 249, 0.6);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+      max-width: 420px;
+      width: 90%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .form-container {
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .form-container label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-container input {
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    input[type="date"] {
+      padding: 4px;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      color: #004792;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+    .p-container {
+      text-align: center;
+    }
   </style>
 </head>
+
 <body>
-  <h1>Adicionar Produto</h1>
-  <form method="POST" action="/salvar_produto">
-    <label>Nome:</label>
-    <input type="text" name="nome" required>
-    
-    <label>Quantidade:</label>
-    <input type="number" name="quantidade" required>
+  <div class="card">
+    <h1>Adicionar Produto</h1>
+    <div class="p-container">
+      <p>Preencha o formulário abaixo para adicionar um novo produto ao estoque.</p>
+    </div>
+    <div class="form-container">
+      <form method="POST" action="/salvar_produto">
+        <label>Nome:</label>
+        <input type="text" name="nome" required>
 
-    <label>Preço:</label>
-    <input type="text" name="preco" required>
+        <label>Quantidade:</label>
+        <input type="number" name="quantidade" required>
 
-    <label>Validade: </label>
-    <input type="date" name="validade" required>
+        <label>Preço:</label>
+        <input type="text" name="preco" required>
 
+        <label>Validade: </label>
+        <input type="date" name="validade" required>
+
+
+    </div class="button-group">
     <button type="submit">Salvar</button>
+    <a href="/estoque">Voltar</a>
+  </div>
+
   </form>
-  <a href="/estoque">Voltar</a>
+
 </body>
+
 </html>

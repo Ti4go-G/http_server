@@ -29,7 +29,7 @@ def start_server():
 
             request_line = data.split(b'\r\n')[0]
             try:
-                method, route, _ = request_line.split(b' ')
+                method, route, _ = request_line.split(b' ') #ex: b'GET /adicionar HTTP/1.1'
             except ValueError:
                 conn.close()
                 continue
