@@ -58,28 +58,65 @@ def gerar_pagina_estoque():
         <meta charset="UTF-8">
         <title>Controle de Estoque</title>
         <style>
-            body {{ font-family: sans-serif; margin: 2em; }}
-            table {{ border-collapse: collapse; width: 80%; margin-top: 1em; }}
-            th, td {{ border: 1px solid #ccc; padding: 8px; text-align: left; }}
-            th {{ background-color: #f2f2f2; }}
-            a {{ text-decoration: none; background: #007bff; color: white; padding: 8px 12px; border-radius: 4px; }}
-            tr.vencido {{ background-color: #ffcccc; /* Vermelho claro */ }}
-            tr.alerta {{ background-color: #fff3cd; /* Amarelo claro */ }}
-            tr.ok {{ background-color: #d4edda; /* Verde claro */ }}
+            body {{
+                font-family: sans-serif;
+                margin: 0;
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-image: linear-gradient(to bottom right, #007bff, #4e00b3);
+            }}
+            .card {{
+                background: rgba(249, 249, 249, 0.6);
+                padding: 24px;
+                border-radius: 10px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+                max-width: 900px;
+                width: 95%;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                align-items: center;
+            }}
+            h1 {{ margin: 0 0 8px 0; }}
+            .actions {{ display: flex; gap: 12px; justify-content: flex-end; margin-bottom: 12px; width: 100%; }}
+            .btn {{ text-decoration: none; background: #007bff; color: white; padding: 8px 12px; border-radius: 6px; }}
+            .btn:hover {{ background: #0056b3; }}
+            table {{ width: 100%; border-collapse: collapse; background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }}
+            thead th {{ text-align: left; padding: 12px 16px; background: linear-gradient(180deg,#f7f7f7,#efefef); color: #333; font-weight: 600; border-bottom: 1px solid #e6e6e6; }}
+            tbody td {{ padding: 12px 16px; border-bottom: 1px solid #f1f1f1; }}
+            tbody tr:hover td {{ background: #f3f7ff; }}
+            tbody tr.vencido td {{ background-color: #ff4d4d !important; color: #fff; }}
+            tbody tr.alerta td {{ background-color: #ffe066 !important; color: #222; }}
+            tbody tr.ok td {{ background-color: #51cf66 !important; color: #fff; }}
+            @media (max-width: 720px) {{
+                .card {{ padding: 8px; }}
+                table, thead, tbody, tr, td, th {{ display: block; width: 100%; }}
+                thead {{ display: none; }}
+                tbody tr {{ margin-bottom: 12px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }}
+                tbody td {{ padding: 10px 12px; display: flex; justify-content: space-between; border-bottom: none; }}
+                tbody td::before {{ content: attr(data-label); color: #555; font-weight: 600; margin-right: 8px; }}
+            }}
+            .header {{ width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }}
         </style>
     </head>
     <body>
-        <h1>Controle de Estoque</h1>
-        <a href="/adicionar">Adicionar Produto</a>
+      <div class="card">
+        <div class="header">
+          <h1>Controle de Estoque</h1>
+          <a class="btn" href="/adicionar">Adicionar Produto</a>
+        </div>
         <table>
-            <thead>
-                <tr>
-                    <th>ID</th><th>Nome</th><th>Quantidade</th><th>Preço</th>
-                    <th>Validade (Dias Restantes)</th>
-                </tr>
-            </thead>
-            <tbody>{linhas_tabela}</tbody>
+          <thead>
+            <tr>
+              <th>ID</th><th>Nome</th><th>Quantidade</th><th>Preço</th>
+              <th>Validade (Dias Restantes)</th>
+            </tr>
+          </thead>
+          <tbody>{linhas_tabela}</tbody>
         </table>
+      </div>
     </body>
     </html>
     """
