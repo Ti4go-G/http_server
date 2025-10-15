@@ -1,7 +1,9 @@
 import json
+import os
 from urllib.parse import unquote_plus
 from utils import carregar_estoque, salvar_estoque, gerar_pagina_estoque
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def build_response(status_code, content_type, body):
     return (
@@ -18,19 +20,17 @@ def handle_get(route: bytes):
         return build_response(200, 'text/html', html.encode('utf-8'))
 
     elif route == b'/':
-        # Redireciona para /estoque
         return b"HTTP/1.1 302 Found\r\nLocation: /estoque\r\n\r\n"
 
     elif route == b'/adicionar':
+        caminho_html = os.path.join(BASE_DIR, 'new_prod.html')  # <-- Caminho absoluto seguro
         try:
-            with open('./new_prod.html', 'r', encoding='utf-8') as f:
+            with open(caminho_html, 'r', encoding='utf-8') as f:
                 html = f.read()
             return build_response(200, 'text/html', html.encode('utf-8'))
         except FileNotFoundError:
             return build_response(404, 'text/html', b"<h1>404 - Pagina nao encontrada</h1>")
 
-
-    #ROTA REST: /api/estoque
     elif route == b'/api/estoque':
         estoque = carregar_estoque()
         json_data = json.dumps(estoque, ensure_ascii=False, indent=2)
@@ -38,7 +38,6 @@ def handle_get(route: bytes):
 
     else:
         return build_response(404, 'text/html', b"<h1>404 - Pagina nao encontrada</h1>")
-
 
 def handle_post(route: bytes, data: bytes):
     if route == b'/salvar_produto':
